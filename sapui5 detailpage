@@ -1,0 +1,245 @@
+<mvc:View
+        controllerName="xxxxx.Experiments.NeuesExperiment.controller.Detail"
+        xmlns:core="sap.ui.core"
+        xmlns="sap.m"
+        xmlns:f="sap.f"
+        xmlns:c="sap.suite.ui.commons"
+        xmlns:l="sap.m.layout"
+        xmlns:u="sap.ui.unified"
+        xmlns:t="sap.ui.table"
+        xmlns:semantic="sap.m.semantic"
+        xmlns:mvc="sap.ui.core.mvc">
+    <u:Shell>
+        <u:user>
+            <u:ShellHeadUserItem
+                    image="sap-icon://person-placeholder"
+                    username="Gast"
+                    press="handleUserItemPressed"/>
+        </u:user>
+        <u:search>
+            <Title text="{i18n>detailpagetitle}" level="H2"/>
+        </u:search>
+    </u:Shell>
+    <semantic:DetailPage
+            id="page"
+            title="{i18n>detailpagetitle}"
+            busy="{detailView>/busy}"
+            busyIndicatorDelay="{detailView>/delay}">
+        <semantic:content>
+            <ObjectHeader title="{ChangeID} :   {Title}"
+                          responsive="true"
+                          icon="sap-icon://request"
+                          iconAlt="{ChangeID} :   {Title}"
+                          iconDensityAware="false"
+                          intro="{Description}"
+                          objectImageShape="Circle"
+                          backgroundDesign="Transparent">
+                <!--<attributes>-->
+                <!--<ObjectAttribute text="{Description}" />-->
+                <!--</attributes>-->
+            </ObjectHeader>
+            <ObjectHeader>
+                <attributes>
+                    <ObjectAttribute title="{i18n>changetype}" text="{ChangeType}"/>
+                    <ObjectAttribute title="{i18n>initiator}" text="{Initiator}"/>
+                    <ObjectAttribute title="{i18n>changereason}" text="{Reason}"/>
+                </attributes>
+            </ObjectHeader>
+
+            <!--<Label text="Name" />-->
+            <!--<Input value="{Title}" />-->
+            <!--<Button id="editButton" text="Edit" type="Transparent"-->
+            <!--press="handleEditPress" />-->
+            <!--<Button id="saveButton" text="Save" type="Transparent"-->
+            <!--press="handleSavePress" visible="false" />-->
+            <!--<Button id="cancelButton" text="Cancel" type="Transparent"-->
+            <!--press="handleCancelPress" visible="false"/>-->
+
+            <IconTabBar id="idIconTabBar" expandable="false" class="sapUiResponsiveContentPadding">
+                <items>
+                    <IconTabFilter icon="sap-icon://attachment" tooltip="{i18n>attachments}" iconColor="Neutral">
+                        <UploadCollection id="UploadCollection"
+                                          items="{path : 'Attachments', templateShareable : 'true'}"
+                                          instantUpload="false"
+                                          uploadEnabled="true"
+                                          showSeparators="All"
+                                          beforeUploadStarts="onBeforeUploadStarts"
+                                          uploadTerminated="onUploadTerminated"
+                                          selectionChange="onSelectionChange"
+                                          change="onChange"
+                                          fileDeleted="onFileDeleted"
+                                          uploadComplete="onUploadComplete"
+                                          multiple="true">
+                            <!--<UploadCollection id="UploadCollection"-->
+                            <!--items="{path : 'Attachments', templateShareable : 'true'}"-->
+                            <!--mode="MultiSelect"-->
+                            <!--uploadEnabled="true"-->
+                            <!--showSeparators="All"-->
+                            <!--beforeUploadStarts="onUploadStarts"-->
+                            <!--uploadTerminated="onUploadTerminated"-->
+                            <!--selectionChange="onSelectionChange"-->
+                            <!--change="onChange"-->
+                            <!--fileDeleted="onFileDeleted"-->
+                            <!--uploadComplete="onUploadComplete"-->
+                            <!--multiple="false">-->
+
+                            <!--<toolbar>-->
+
+                            <!--<OverflowToolbar id="myId">-->
+                            <!--<Title id="attachmentTitle" text="Attachments"/>-->
+                            <!--<ToolbarSpacer/>-->
+                            <!--<Button id="downloadButton" icon="sap-icon://download" press="onDownloadItem"-->
+                            <!--enabled="false"-->
+                            <!--type="Transparent"></Button>-->
+                            <!--<Button id="versionButton" text="Upload a new version" press="onVersion"-->
+                            <!--enabled="false" type="Transparent"></Button>-->
+                            <!--<UploadCollectionToolbarPlaceholder></UploadCollectionToolbarPlaceholder>-->
+                            <!--</OverflowToolbar>-->
+                            <!--</toolbar>-->
+
+                            <items>
+                                <UploadCollectionItem documentId="{ID}"
+                                                      fileName="{Filename}"
+                                                      thumbnailUrl="{thumbnailUrl}"
+                                                      url="{url}"
+                                                      mimeType="{MimeType}"
+                                                      enableSort="true"
+                                                      enableFilter="true"
+                                                      enableEdit="true"
+                                                      enableDelete="true"
+                                                      visibleDelete="false"
+                                                      visibleEdit="false">
+                                    <attributes>
+                                        <ObjectAttribute title="{i18n>filesize}:{Size}" text="{Description}"/>
+                                    </attributes>
+                                </UploadCollectionItem>
+                            </items>
+                        </UploadCollection>
+                    </IconTabFilter>
+                    <IconTabFilter
+                            id="iconTabBarFilterInfo"
+                            icon="sap-icon://hint"
+                            tooltip="{i18n>affectedobjects}"
+                            iconColor="Neutral">
+                        <Table id="ObjectTable" items="{AffectObjects}" class="sapUiResponsiveMargin"
+                               updateFinished="onObjectListUpdateFinished" busyIndicatorDelay="{masterView>/delay}">
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <Title text="{i18n>objectlist} ({detailView>/countobjectLists})" level="H2"/>
+                                    <ToolbarSpacer/>
+                                    <Button icon="sap-icon://add-product" press="handleSelectDialogPress"
+                                            tooltip="{i18n>addproduct}">
+
+                                        <customData>
+                                            <core:CustomData
+                                                    key="multi"
+                                                    value="true"/>
+                                        </customData>
+                                    </Button>
+
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column width="3em">
+                                    <Text text="{i18n>item}"/>
+                                </Column>
+                                <Column width="3em">
+                                    <Text text="{i18n>name}"/>
+                                </Column>
+                                <Column width="3em">
+                                    <Text text="{i18n>number}"/>
+                                </Column>
+
+                            </columns>
+                            <items>
+                                <ColumnListItem type="Active">
+
+                                    <cells>
+
+                                        <ObjectIdentifier title="{ObjID}"/>
+                                        <ObjectIdentifier title="{Name}"/>
+                                        <ObjectIdentifier title="{Number}"/>
+
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+
+                    </IconTabFilter>
+                    <IconTabFilter icon="sap-icon://documents" tooltip="{i18n>document}"
+                                   iconColor="Neutral">
+                        <Table id="DocumentTable" items="{Documents}" updateFinished="onDocumentListUpdateFinished"
+                               busyIndicatorDelay="{masterView>/delay}">
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <Title text="{i18n>documentlist} ({detailView>/countLists})" level="H2"/>
+                                    <ToolbarSpacer/>
+                                    <Button icon="sap-icon://add-document" press="onSelectDialogPress"
+                                            tooltip="{i18n>adddocument}">
+                                        <customData>
+                                            <core:CustomData
+                                                    key="multi"
+                                                    value="true"/>
+                                        </customData>
+                                    </Button>
+                                </OverflowToolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column width="3em">
+                                    <Text text="{i18n>document}"/>
+                                </Column>
+                                <Column width="3em">
+                                    <Text text="{i18n>art}"/>
+                                </Column>
+                                <Column width="3em">
+                                    <Text text="{i18n>tid}"/>
+                                </Column>
+                                <Column width="3em">
+                                    <Text text="{i18n>version}"/>
+                                </Column>
+                                <Column width="3em">
+                                    <Text text="{i18n>description}"/>
+                                </Column>
+
+
+                            </columns>
+                            <items>
+                                <ColumnListItem type="Active">
+                                    <cells>
+                                        <ObjectIdentifier title="{DocumentID}"/>
+                                        <ObjectIdentifier title="{Art}"/>
+                                        <ObjectIdentifier text="{TID}"/>
+                                        <ObjectIdentifier text="{Version}"/>
+                                        <ObjectIdentifier title="{Description}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </IconTabFilter>
+                </items>
+            </IconTabBar>
+        </semantic:content>
+        <semantic:sendEmailAction>
+        <semantic:SendEmailAction
+        id="shareEmail"
+        press="handleEmailPress"/>
+        </semantic:sendEmailAction>
+        <!--<semantic:shareInJamAction>-->
+            <!--<semantic:ShareInJamAction-->
+                    <!--id="shareInJam"-->
+                    <!--visible="{FLP>/isShareInJamActive}"-->
+                    <!--press="onShareInJamPress"/>-->
+        <!--</semantic:shareInJamAction>-->
+        <semantic:saveAsTileAction>
+            <Button text=" Save as Tile" icon ="sap-icon://add-favorite" press="handleBookmarkPressed"/>
+            <!--<footerbar:AddBookmarkButton-->
+                    <!--id="shareTile"-->
+                    <!--title="{Title}"-->
+                    <!--subtitle="Test"-->
+                    <!--info="{Description}"-->
+                    <!--tileIcon="sap-icon://documents"/>-->
+        </semantic:saveAsTileAction>
+
+    </semantic:DetailPage>
+
+</mvc:View>
