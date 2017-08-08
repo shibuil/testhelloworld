@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+First Name: <input type="text" id="fname" value="John">
+<button onclick="checkName()">Check Name</button>
+<p id="demo"></p>
+
+<script>
+function checkName() {
+  var firstName = document.getElementById("fname").value;
+  var result = (firstName === "John") ? "Hello John!":"You're not John!";
+  document.getElementById("demo").innerHTML = result;
+}
+</script>
+
+</body>
+</html>
