@@ -1,0 +1,36 @@
+<core:FragmentDefinition
+        xmlns="sap.m"
+        xmlns:f="sap.ui.layout.form"
+        xmlns:core="sap.ui.core">
+    <TableSelectDialog id="Dialog"
+                       title="Select Products"
+                       search="handleSearch"
+                       confirm="handleClose"
+                       close="handleClose"
+                       items="{
+                           path: '/MaterialLists' }">
+        <ColumnListItem>
+            <cells>
+                <ObjectIdentifier
+                        title="{Name}"
+                        text="{ID}"
+                        type="Active"/>
+                <ObjectNumber number="{Number}"/>
+            </cells>
+        </ColumnListItem>
+        <columns>
+            <Column width="30em">
+                <header>
+                    <Text text="Material"/>
+                </header>
+            </Column>
+            <Column
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <header>
+                    <Text text="Number"/>
+                </header>
+            </Column>
+        </columns>
+    </TableSelectDialog>
+</core:FragmentDefinition>
