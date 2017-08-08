@@ -1,0 +1,14 @@
+<core:FragmentDefinition
+xmlns="sap.m"
+xmlns:core="sap.ui.core">
+<ActionSheet
+        title="Choose Your Action"
+        showCancelButton="true"
+        placement="Bottom">
+    <buttons>
+        <Button text="About" icon="sap-icon://hint" press="handleAboutPressed"/>
+        <Button text="Give Feedback" icon="sap-icon://marketing-campaign" press="handleFeedbackPressed"/>
+        <Button text="Sign out" icon="sap-icon://log" press="handleSignOutPressed"/>
+    </buttons>
+</ActionSheet>
+</core:FragmentDefinition>
