@@ -1,0 +1,52 @@
+<core:FragmentDefinition
+        xmlns="sap.m"
+        xmlns:f="sap.ui.layout.form"
+        xmlns:core="sap.ui.core">
+    <TableSelectDialog id="DialogDocument"
+                       title="Select Documents"
+                       search="onSearch"
+                       confirm="onClose"
+                       close="onClose"
+                       items="{
+                           path: '/DocumentLists' }">
+        <ColumnListItem>
+            <cells>
+
+                <ObjectIdentifier
+                        title="{Document}"
+                        type="Active"/>
+                <ObjectIdentifier text="{TID}"/>
+                <ObjectIdentifier text="{Art}"/>
+                <ObjectIdentifier text="{Version}"/>
+                <ObjectNumber number="{Description}"/>
+            </cells>
+        </ColumnListItem>
+        <columns>
+            <Column width="10em">
+                <header>
+                    <Text text="Documents"/>
+                </header>
+            </Column>
+            <Column width="10em">
+                <header>
+                    <Text text="TID"/>
+                </header>
+            </Column>
+            <Column width="10em">
+                <header>
+                    <Text text="Art"/>
+                </header>
+            </Column>
+            <Column width="10em">
+                <header>
+                    <Text text="Version"/>
+                </header>
+            </Column>
+            <Column width="10em">
+                <header>
+                    <Text text="Description"/>
+                </header>
+            </Column>
+        </columns>
+    </TableSelectDialog>
+</core:FragmentDefinition>
