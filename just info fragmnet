@@ -1,0 +1,34 @@
+<core:FragmentDefinition
+        xmlns="sap.m"
+        xmlns:l="sap.ui.layout"
+        xmlns:core="sap.ui.core">
+    <Dialog id="infoDialog" title="About">
+        <beginButton>
+            <Button text="OK" press="onOkPressed"/>
+        </beginButton>
+        <ObjectHeader icon="sap-icon://request"
+                      title="Change Request Management"
+                      backgroundDesign="Translucent"/>
+
+        <l:VerticalLayout class="sapUiSmallMarginBegin">
+            <l:content>
+                <Label text="Technical Name" design="Bold"/>
+                <Text text="xxxx.storeChangeRequest" class="sapUiSmallMarginBottom"/>
+
+                <Label text="Version" design="Bold"/>
+                <Text text="1.6.3" class="sapUiSmallMarginBottom"/>
+
+                <Label text="SAPUI5" design="Bold"/>
+                <Text text="1.28.34 (20160509-1345)" class="sapUiSmallMarginBottom"/>
+
+                <Label text="UserAgent" design="Bold"/>
+                <Text text="Mozilla/5.0 (Windows NT 6.1; Win64; x64)"/>
+                <Text text="AppleWebKit/537.36 (KHTML, like Gecko)"/>
+                <Text text="Chrome/58.0.3029.110 Safari/537.36" class="sapUiSmallMarginBottom"/>
+            </l:content>
+        </l:VerticalLayout>
+
+
+    </Dialog>
+
+</core:FragmentDefinition>
