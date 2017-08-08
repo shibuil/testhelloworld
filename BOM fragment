@@ -1,0 +1,41 @@
+<core:FragmentDefinition
+        xmlns="sap.m"
+        xmlns:f="sap.ui.layout.form"
+        xmlns:core="sap.ui.core">
+    <Dialog
+            title="Create Bom">
+        <beginButton>
+            <Button type="Emphasized" text="Save" press="onCreateBomSave"/>
+        </beginButton>
+        <endButton>
+            <Button text="{i18n>cancel}" press="onCreateBomCancel"/>
+        </endButton>
+        <content>
+            <f:SimpleForm
+                    maxContainerCols="7"
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    labelSpanL="3"
+                    labelSpanM="3"
+                    emptySpanL="4"
+                    emptySpanM="4"
+                    columnsL="1"
+                    columnsM="1"
+                    class="editableForm">
+                <f:content>
+                    <Label text="Material"  />
+                    <Input value=""/>
+                    <!--<Label text="MaterialName" required="true" />-->
+                    <!--<Input value=""/>-->
+                    <Label text="Number" required="true" />
+                    <Input value=""/>
+                    <Label text="BomUsage"/>
+                    <Input value="">
+                    </Input>
+                    <Label text="plant" labelFor="fldName"/>
+                    <Input value=""/>
+                </f:content>
+            </f:SimpleForm>
+        </content>
+    </Dialog>
+</core:FragmentDefinition>
