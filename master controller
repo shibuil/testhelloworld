@@ -1,0 +1,211 @@
+sap.ui.define([
+    "sap/ui/core/mvc/Controller",
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/core/routing/History",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+    "sap/ui/model/Sorter",
+    "xxxx/Experiments/NeuesExperiment/model/grouper",
+    "xxxx/Experiments/NeuesExperiment/model/formatter",
+    "sap/m/GroupHeaderListItem",
+    "sap/ui/Device",
+    "sap/ui/core/ValueState",
+    "sap/m/MessageBox",
+    "sap/m/MessageToast",
+    "xxxx/Experiments/NeuesExperiment/model/GroupSortStatus"
+], function (Controller, JSONModel, History, Filter, FilterOperator, Sorter, grouper, formatter, GroupHeaderListItem, Device, ValueState, MessageBox, MessageToast, GroupSortStatus) {
+
+    return Controller.extend("xxxx.Experiments.NeuesExperiment.controller.Master", {
+
+        formatter: formatter,
+
+        onInit: function (oEvent) {
+            var oList = this.byId("idList"),
+                oViewModel = this._createViewModel(),
+                iOriginalBusyDelay = oList.getBusyIndicatorDelay();
+            this._oGroupSortStatus = new GroupSortStatus(oViewModel, grouper.groupUnitNumber(this.getOwnerComponent().getModel("i18n").getResourceBundle()));
+            this._oList = oList;
+            this._oVSD = null;
+            this._sSortField = null;
+            this._aValidSortFields = ["Title", "Status", "ChangeType",];
+            this._bSortDescending = false;
+            this._oRouterArgs = null;
+            // oList.setSelectedItem(oList.getItems()[0], true /*selected*/, true /*fire event*/);
+            this._oListFilterStatus = {
+                aFilter: [],
+                aSearch: []
+            };
+            this.getView().setModel(oViewModel, "masterView");
+            var oView = this.getView();
+            oView.setModel(this.oModel);
+            this.oSF = oView.byId("searchField");
+            oList.attachEventOnce("updateFinished", function () {
+                // Restore original busy indicator delay for the list
+                oViewModel.setProperty("/delay", iOriginalBusyDelay);
+            });
+
+            this.getView().addEventDelegate({
+                onBeforeFirstShow: function () {
+                    this.getOwnerComponent().oListSelector.setBoundMasterList(oList);
+                }.bind(this)
+            });
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.getRoute("master").attachPatternMatched(this._onMasterMatched, this);
+            oRouter.attachBypassed(this.onBypassed, this);
+        },
+
+        _onMasterMatched() {
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            this.getOwnerComponent().oListSelector.oWhenListLoadingIsDone.then(
+                (mParams) => {
+                    if (mParams.list.getMode() === "None") {
+                        return;
+                    }
+                    var sChangeId = mParams.firstListitem.getBindingContext().getProperty("ChangeID");
+                    oRouter.navTo("detail", {changeId: sChangeId}, true);
+                },
+                (mParams) => {
+                    if (mParams.error) {
+                        return;
+                    }
+                    oRouter.getTargets().display("detailNoObjectsAvailable");
+                }
+            );
+        },
+        onUpdateFinished: function (oEvent) {
+            this._updateListItemCount(oEvent.getParameter("total"));
+        },
+
+        onSelectionChange(oEvent){
+            this._showDetail(oEvent.getParameter("listItem") || oEvent.getSource());
+        },
+        _showDetail(oItem){
+            var bReplace = !Device.system.phone;
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.navTo("detail", {
+                changeId: oItem.getBindingContext().getProperty("ChangeID")
+            }, bReplace);
+        },
+        _updateListItemCount(iTotalItems) {
+            var sTitle;
+            // only update the counter if the length is final
+            if (this._oList.getBinding("items").isLengthFinal()) {
+                sTitle = this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("masterTitleCount", [iTotalItems]);
+                this.getView().getModel("masterView").setProperty("/title", sTitle);
+            }
+        },
+        onAdd: function () {
+            var dialog = this._getCreateDialog();
+            var oContext = this.getView().getModel().createEntry("/ChangeRequests", {
+                groupId: "CommitRequest",
+                properties: {
+                    Title: "",
+                    Description: "",
+                    ChangeType: "",
+                    Reason: "",
+                    Initiator: ""
+                },
+                success: () => {
+                    dialog.setBindingContext(null);
+                    dialog.close();
+                    this.getView().getModel().refresh(true);
+                }
+            });
+
+            dialog.setBindingContext(oContext);
+            dialog.open();
+        },
+        onSearch: function (oEvent) {
+            var aFilter = [];
+            var sQuery = oEvent.getSource().getValue();
+            if (sQuery && sQuery.length > 0) {
+                aFilter.push(new Filter("Title", FilterOperator.Contains, sQuery));
+                aFilter.push(new Filter("ChangeID", FilterOperator.Contains, sQuery));
+                aFilter.push(new Filter("ChangeType", FilterOperator.Contains, sQuery));
+                var oFilter = new Filter({filters: aFilter, and: false});
+            }
+            else {
+                oFilter = null;
+            }
+            // filter binding
+            var list = this.getView().byId("idList");
+            var oBinding = list.getBinding("items");
+            oBinding.filter(oFilter, "Application");
+        },
+
+        onSort(oEvent) {
+            var sKey = oEvent.getSource().getSelectedItem().getKey(),
+                aSorters = this._oGroupSortStatus.sort(sKey);
+
+            this._applyGroupSort(aSorters);
+        },
+        _applyGroupSort(aSorters) {
+            this._oList.getBinding("items").sort(aSorters);
+        },
+
+        onCreateCancel: function () {
+            var dialog = this._getCreateDialog();
+            var oContext = dialog.getBindingContext();
+            this.getView().getModel().deleteCreatedEntry(oContext);
+            dialog.setBindingContext(null);
+            dialog.close();
+        },
+        onCreateApprove: function () {
+            var bReplace = false;
+            var oView = this.getView();
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            var dialog = this._getCreateDialog();
+            var oContext = dialog.getBindingContext();
+            this.getView().getModel().submitChanges({
+                groupId: "CommitRequest"
+            });
+            var msg = "Item Created";
+            MessageToast.show(msg);
+            dialog.setBindingContext(null);
+            dialog.close();
+            oRouter.navTo("detail",
+                {changeId: oContext.getProperty("ChangeID")},
+                bReplace);
+            oView.unbindObject();
+
+        },
+        _getCreateDialog: function () {
+            if (!this._oCreateDialog) {
+                this._oCreateDialog = sap.ui.xmlfragment("ilc.Experiments.NeuesExperiment.view.CreateReqDialog", this);
+                // For Validation
+                // sap.ui.getCore().attachValidationError(function (oEvent) {
+                //     oEvent.getParameter("element").setValueState(ValueState.Error);
+                // });
+                // sap.ui.getCore().attachValidationSuccess(function (oEvent) {
+                //     oEvent.getParameter("element").setValueState(ValueState.None);
+                // });
+                this.getView().addDependent(this._oCreateDialog);
+            }
+
+            return this._oCreateDialog;
+        },
+        _createViewModel() {
+            return new JSONModel({
+                isFilterBarVisible: false,
+                filterBarLabel: "",
+                delay: 0,
+                title: this.getOwnerComponent().getModel("i18n").getResourceBundle().getText("masterTitleCount", [0]),
+                sortBy: "Title",
+                groupBy: "None"
+                //, myUser: this.getService("UserInfo").getId()
+            });
+        },
+        onBypassed() {
+            this._oList.removeSelections(true);
+        }
+
+    });
+
+});
+
+
+
+
+
+
+
