@@ -1,0 +1,86 @@
+<core:FragmentDefinition
+        xmlns="sap.m"
+        xmlns:l="sap.ui.layout"
+        xmlns:core="sap.ui.core">
+    <Dialog id="Feedback" title="Give Feedback">
+        <beginButton>
+            <Button text="Send" press="onSendPressed" enabled="{detailEditViewModel>/enableSave}"/>
+        </beginButton>
+        <endButton>
+            <Button text="Cancel" press="onCancelPressed"/>
+        </endButton>
+        <content>
+            <ObjectHeader icon="sap-icon://request"
+                          title="Change Request Management"
+                          backgroundDesign="Translucent"/>
+            <!--<firstStatus>-->
+            <!--<ObjectStatus-->
+            <!--text="{Status/Value}"-->
+            <!--icon="{ path: 'Status/ID', formatter: '.formatter.statusIconFormatter' }"-->
+            <!--state="{ path: 'Status/ID', formatter: '.formatter.statusValueStateFormatter' }"-->
+            <!--/>-->
+            <!--</firstStatus>-->
+            <!--</ObjectHeader>-->
+            <Label id="Rate" text="Rate Your Experience" required="true" class="sapUiLargeMarginBegin"/>
+            <l:HorizontalLayout id="Result" class="sapUiMediumMarginBegin"/>
+            <!--<RatingIndicator id="RI_M" maxValue="5" class="sapUiSmallMarginBottom"  iconSize="22px"   tooltip="Rating Tooltip"/>-->
+            <HBox class="sapUiLargeMarginBegin">
+                <RatingIndicator maxValue="5" value = "4"/>
+                <!--<SegmentedButton  select="onSegmentButtonAction">-->
+                    <!--<items>-->
+                                              <!---->
+                        <!--<SegmentedButtonItem id="excellent"-->
+                                             <!--icon="sap-icon://BusinessSuiteInAppSymbols/icon-face-very-happy"-->
+                                             <!--press="onPressExcellent"/>-->
+                        <!--<SegmentedButtonItem id="good" icon="sap-icon://BusinessSuiteInAppSymbols/icon-face-happy"-->
+                                             <!--press="onPressHappy"/>-->
+                        <!--<SegmentedButtonItem id="neutral" icon="sap-icon://BusinessSuiteInAppSymbols/icon-face-neutral"-->
+                                             <!--press="onPressAverage"/>-->
+                        <!--<SegmentedButtonItem id="bad" icon="sap-icon://BusinessSuiteInAppSymbols/icon-face-bad"-->
+                                             <!--press="onPressPoor"/>-->
+                        <!--<SegmentedButtonItem id="veryBad" icon="sap-icon://BusinessSuiteInAppSymbols/icon-face-very-bad"-->
+                                             <!--press="onPressVeryPoor"/>-->
+                    <!--</items>-->
+                <!--</SegmentedButton>-->
+
+            </HBox>
+
+            <l:VerticalLayout class="sapUiLargeMarginBegin">
+                <Label text="Comment Here:"/>
+                <TextArea id="Comment" placeholder="Describe what You Like or What needs to be Improved" rows="5"
+                          cols="40" enabled="true"/>
+                <!--<Link-->
+                <!--text="Show Technical Data"-->
+                <!--href="" />-->
+            </l:VerticalLayout>
+            <VBox>
+                <l:VerticalLayout class="sapUiMediumMarginBegin">
+                    <Link text="Show Technical Data " emphasized="true"
+                          href="https://www.sapfioritrial.com/terms.html"/>
+                    <CheckBox id ="ChId1" text="Make my Feedback anonymous" selected="true"/>
+                    <CheckBox id ="ChId2" text="I have read and accept the legal agreement"/>
+                </l:VerticalLayout>
+            </VBox>
+            <VBox>
+                <l:VerticalLayout class="sapUiMediumMarginBegin">
+                    <Link text="SAP Legal Agreement " emphasized="true"
+                          href="https://www.sapfioritrial.com/terms.html"/>
+                </l:VerticalLayout>
+            </VBox>
+
+            <Bar>
+                <contentRight>
+                    <Link
+                            text="Privacy " emphasized="true"
+                            href="https://www.sapfioritrial.com/terms.html"/>
+                    <Text text="&#38;"/>
+                    <Link
+                            text="Terms of Use" emphasized="true"
+                            href="https://www.sapfioritrial.com/terms.html"/>
+                </contentRight>
+            </Bar>
+        </content>
+
+    </Dialog>
+
+</core:FragmentDefinition>
