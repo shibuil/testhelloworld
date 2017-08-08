@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p id="test"></p> 
+
+<script>
+var alpha = ["G", "O", "A", "K","C"];
+alpha.sort();
+document.getElementById("test").innerHTML = alpha;
+</script>
+
+</body>
+</html>
